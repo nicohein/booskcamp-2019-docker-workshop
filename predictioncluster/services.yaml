@@ -1,0 +1,16 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: prediction-service
+spec:
+  selector:
+    app: prediction
+  ports:
+    - name: http
+      protocol: TCP
+      port: 80
+      targetPort: "api-port"
+      # proxy into admin-port 8081
+  type: LoadBalancer
+  loadBalancerSourceRanges:
+    - 0.0.0.0/0 # enter your IP

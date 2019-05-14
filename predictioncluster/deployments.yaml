@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: prediction
+  labels:
+    app: prediction
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: prediction
+  template:
+    metadata:
+      name: prediction
+      labels:
+        app: prediction
+    spec:
+      containers:
+        - name: prediction
+          image: prdictionapiacr.azurecr.io/predictionapi:0.1
+          imagePullPolicy: Always
+          ports:
+            - name: "api-port"
+              containerPort: 5000
+          resources:
+            limits:
+              memory: 1Gi
+            requests:
+              memory: 256Mi
+          readinessProbe:
+            httpGet:
+              path: /ping
+              port: 5000
+            initialDelaySeconds: 10 # is is quite long but we have to load a model...
+            periodSeconds: 3
+          volumeMounts:
+            - name: config-volume
+              mountPath: /etc/config
+      volumes:
+        - name: config-volume
+          configMap:
+            name: prediction-config

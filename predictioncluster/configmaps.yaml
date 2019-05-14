@@ -1,0 +1,4 @@
+region: eastus
+
+# Credentials to access services - credentials should oly be used during local testing
+
